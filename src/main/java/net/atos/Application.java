@@ -23,8 +23,23 @@ public class Application extends RouteBuilder {
         SpringApplication.run(Application.class, args);
     }
 
+    @Bean
+    ServletRegistrationBean servletRegistrationBean() {
+      ServletRegistrationBean servlet = new ServletRegistrationBean
+              (new CamelHttpTransportServlet(), "/camel/*");
+      servlet.setName("CamelServlet");
+      return servlet;
+    }
+
     @Override
     public void configure() throws Exception {
+
+        restConfiguration()
+              .host("0.0.0.0")s f
+              .port("8080")
+              .component("servlet")
+              .dataFormatProperty("prettyPrint", "true")
+              .contextPath("/camel");
 
         rest("/ping").description("User REST service")
         	.consumes(MediaType.APPLICATION_JSON_VALUE)
